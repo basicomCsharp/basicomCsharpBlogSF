@@ -14,12 +14,14 @@ namespace BlogSF.Controller
         private ICommentRepositories _comment;
         private IUserRepositories _user;
         private IBookRepositories _book;
-        
-        public CommentController(ICommentRepositories comment, IUserRepositories user, IBookRepositories book)
+        private ITagRepositories _tag;
+
+        public CommentController(ICommentRepositories comment, IUserRepositories user, IBookRepositories book, ITagRepositories tag)
         {           
             _comment = comment;
             _user = user;
             _book= book;
+            _tag= tag;
         }
  
         [HttpPost]
