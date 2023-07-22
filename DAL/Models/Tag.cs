@@ -14,7 +14,6 @@ namespace BlogSF
     {        
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = String.Empty;
-        public DateTime CreatedData { get; set; } = DateTime.Now;
-        public List<Book> Books { get; set; } = new List<Book>();
+        public DateTime CreatedData { get; set; } = DateTime.Now;        
     }
 }

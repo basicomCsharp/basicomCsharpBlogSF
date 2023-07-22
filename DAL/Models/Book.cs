@@ -16,9 +16,6 @@ namespace BlogSF
         public string Name { get; set; } = String.Empty;        
         public string Author { get; set; } = String.Empty;
         public DateTime CreatedData { get; set; } = DateTime.Now;                 
-        public string Content { get; set; } = String.Empty;
-
-        public List<Comment> Comments { get; set; } = new List<Comment>();        
-        public List<Tag> Tags { get; set; } = new List<Tag>();
+        public string Content { get; set; } = String.Empty;       
     }
 }
