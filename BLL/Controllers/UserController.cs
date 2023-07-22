@@ -1,5 +1,6 @@
 ﻿using BlogSF.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace BlogSF.BLL.Controllers
 {
@@ -19,43 +20,67 @@ namespace BlogSF.BLL.Controllers
             _book = book;
             _tag = tag;
         }
-        //[HttpGet(Name = "GetUserById")]
-        //[Route("")]
-        //public async Task<IActionResult> GetById(Guid id)
-        //{
-        //    try
-        //    {
-        //        var volume = await _user.Get(id);
-        //        if (volume == null)
-        //            return StatusCode(400, "Комментарий не найден!");
+        
+        [HttpGet]
+        [Route("GetUserById")]
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            try
+            {
+                var value = await _user.Get(id);
+                if (value == null)
+                    return StatusCode(400, "Пользователь не найден!");
 
-        //        return StatusCode(200, volume);
-        //    }
-        //    catch
-        //    { }
-        //    return NotFound();
-        //}
-        //[HttpGet(Name = "GetAllUsers")]
-        //[Route("")]
-        //public async Task<IActionResult> GetAllUsers()
-        //{
+                return StatusCode(200, value);
+            }
+            catch
+            { }
+            return NotFound();
+        }
 
-        //    var volume = await _user.GetAll();
-        //    return StatusCode(200);
-        //}
+        [HttpGet]
+        [Route("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+
+            var value = await _user.GetAll();
+            return StatusCode(200, value);
+        }
 
         [HttpPost]
-        [Route("")]
-        public async Task<IActionResult> Create(User volume)
+        [Route("Create")]
+        public async Task<IActionResult> Create(User value)
         {
-            volume.Id= Guid.NewGuid();
-            volume.FirstName = "Иван2";
-            volume.LastName = "Иванов2";
-            volume.Email = "mail2@mail.ru";
-            volume.login = "login2";
-            volume.password = "password2";
-            await _user.Create(volume);
-            return StatusCode(200, volume);
+            value.Id = Guid.NewGuid();
+            value.FirstName = "Иван"+ DateTime.Now.Day.ToString(); ;
+            value.LastName = "Иванов" + DateTime.Now.ToString(); ;
+            value.Email = DateTime.Now.Hour.ToString() +"@mail.ru";
+            value.login = "login";
+            value.password = "password";
+            await _user.Create(value);
+            return StatusCode(200, value);
+        }
+
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update(User value)
+        {
+
+            value.Id = new Guid("384c43f2-4b37-470b-93fc-947000a3acc9");
+            value.FirstName = "Иван";
+            value.LastName= "Ивановcкий";
+            value.Email = "ivan@mail.ru";
+            value.login = "login2";
+            value.password = "password3";
+            
+            try
+            {
+                await _user.Update(value);
+                return StatusCode(200);
+            }
+            catch
+            { }
+            return NoContent();
         }
         [HttpDelete]
         [Route("")]

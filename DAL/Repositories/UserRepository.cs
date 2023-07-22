@@ -38,11 +38,10 @@ namespace BlogSF.DAL.Repositories
             return await db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
 
         }
-
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await db.Users.ToListAsync();            
-        }
+            return await db.Users.ToListAsync();
+        }        
 
         public async Task Update(User value)
         {

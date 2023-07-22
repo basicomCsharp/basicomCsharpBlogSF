@@ -28,7 +28,11 @@ namespace BlogSF.Controller
         [Route("CreateComment")]
         public async Task<IActionResult> CreateComment(Comment newComment)
         {
-           await _comment.Create(newComment);
+            newComment = new Comment();
+            newComment.Id = Guid.NewGuid();
+            newComment.Title = DateTime.Now.Date.ToString();
+            newComment.Text = DateTime.Now.ToString();
+            await _comment.Create(newComment);
             return StatusCode(200, newComment);
         }
 
@@ -39,7 +43,7 @@ namespace BlogSF.Controller
             try
             {
                 await _comment.Update(thisComment);
-                return StatusCode(200);
+                return StatusCode(200,thisComment);
             }
             catch
             { }
@@ -53,20 +57,21 @@ namespace BlogSF.Controller
             try
             {
                 await _comment.Delete(id);
+                return StatusCode(200, " Комментарий удалён");
             }
             catch
             {}
             return NotFound();
         }
 
-        //[HttpGet(Name = "GetAllComments")]
+       
         [HttpGet]
         [Route("GetAllComments")]
         public async Task<IActionResult> GetAllComments()
         {
-           // var comments = await _comment.GetAll();
+            var comments = await _comment.GetAll();
 
-            return  StatusCode(200);
+            return  StatusCode(200,comments);
         }
 
         //[HttpGet(Name = "GetCommentById")]
@@ -74,16 +79,16 @@ namespace BlogSF.Controller
         [Route("GetCommentById")]
         public async Task<IActionResult> GetCommentById(Guid id)
         {
-            //try
-            //{
-            //    var comment = await _comment.Get(id);
-            //    if (comment == null)
-            //        return StatusCode(400, "Комментарий не найден!");
+            try
+            {
+                var comment = await _comment.Get(id);
+                if (comment == null)
+                    return StatusCode(400, "Комментарий не найден!");
 
-            //    return StatusCode(200);
-            //}
-            //catch
-            //{ }
+                return StatusCode(200,comment);
+            }
+            catch
+            { }
             return NotFound();
         }
     }    

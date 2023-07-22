@@ -15,12 +15,12 @@ namespace BlogSF
         public string Title { get; set; } = string.Empty;
         public string Text { get; set; } = string.Empty;
 
-        public Guid UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
+        //public Guid UserId { get; set; }
+        //[ForeignKey("UserId")]
+        //public User User { get; set; }
 
-        [ForeignKey("BookId")]
-        public Guid BookId { get; set; }
-        public Book Book { get; set; }
+        //[ForeignKey("BookId")]
+        //public Guid BookId { get; set; }
+        //public Book Book { get; set; }
     }
 }
