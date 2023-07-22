@@ -11,8 +11,7 @@ namespace BlogSF
 {
     [Table("Tags")]
     public class Tag
-    {
-        [Key]
+    {        
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = String.Empty;
         public DateTime CreatedData { get; set; } = DateTime.Now;

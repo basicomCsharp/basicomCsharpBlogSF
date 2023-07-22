@@ -11,8 +11,7 @@ namespace BlogSF
 {
     [Table("Books")]
     public class Book
-    {
-        [Key]
+    {        
         public Guid Id { get; set; } = Guid.NewGuid();        
         public string Name { get; set; } = String.Empty;        
         public string Author { get; set; } = String.Empty;

@@ -11,7 +11,6 @@ namespace BlogSF
     [Table("Users")]
     public class User
     {
-        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();       
         public string FirstName { get; set; } = String.Empty;        
         public string LastName { get; set; } = String.Empty;
