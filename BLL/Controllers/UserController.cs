@@ -79,12 +79,12 @@ namespace BlogSF.BLL.Controllers
         {
 #if DEBUG
             value.Id = Guid.NewGuid();
-            value.FirstName = "Админ"+ DateTime.Now.Day.ToString(); ;
-            value.LastName = "Админов" + DateTime.Now.ToString(); ;
+            value.FirstName = "Пётр" + DateTime.Now.Day.ToString(); ;
+            value.LastName = "Петров" + DateTime.Now.ToString(); ;
             value.Email = DateTime.Now.Hour.ToString() +"@mail.ru";
             value.Login = "login"+ value.FirstName;
             value.Password = "password" + value.LastName;
-            value.Role = "admin";//new Role() { Id = Guid.NewGuid(), Name ="admin" };
+            value.Role = new Role() { Id = Guid.NewGuid(), Name ="user" };
 #endif
             await _user.Create(value);
             return StatusCode(200, value);

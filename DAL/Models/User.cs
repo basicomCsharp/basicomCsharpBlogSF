@@ -11,7 +11,7 @@ namespace BlogSF
     [Table("Users")]
     public class User
     {
-        internal string id;
+        //internal string id;
 
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();       
@@ -20,6 +20,6 @@ namespace BlogSF
         public string Email { get; set; } = String.Empty;
         public string Login { get; set; } = String.Empty;
         public string Password { get; set; } = String.Empty;
-        public string Role { get; set; } = String.Empty;
+        public Role Role { get; set; }//public string Role { get; set; } = String.Empty;
     }
 }
