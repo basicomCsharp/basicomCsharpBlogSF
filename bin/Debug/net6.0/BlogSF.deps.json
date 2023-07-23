@@ -8,7 +8,6 @@
     ".NETCoreApp,Version=v6.0": {
       "BlogSF/1.0.0": {
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "7.0.9",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.20",
           "Microsoft.EntityFrameworkCore.Sqlite": "7.0.9",
           "Microsoft.EntityFrameworkCore.Tools": "6.0.20",

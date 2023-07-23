@@ -11465,7 +11465,6 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "Microsoft.Data.Sqlite.Core >= 7.0.9",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.20",
       "Microsoft.EntityFrameworkCore.Sqlite >= 7.0.9",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.20",
@@ -11522,10 +11521,6 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": {
-            "target": "Package",
-            "version": "[7.0.9, )"
-          },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
             "version": "[6.0.20, )"

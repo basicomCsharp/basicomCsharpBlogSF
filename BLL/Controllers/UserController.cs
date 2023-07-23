@@ -1,6 +1,7 @@
 ﻿using BlogSF.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
 
 namespace BlogSF.BLL.Controllers
 {
@@ -20,7 +21,25 @@ namespace BlogSF.BLL.Controllers
             _book = book;
             _tag = tag;
         }
-        
+
+        [HttpPost]
+        [Route("authenticate")]
+        public async Task<User> Authenticate(string login, string password)
+        {
+            if (String.IsNullOrEmpty(login) ||
+              String.IsNullOrEmpty(password))
+                throw new ArgumentNullException("Запрос не корректен");
+
+            var user = _user.GetByLogin(login);
+            if (user is null)
+                throw new AuthenticationException("Пользователь на найден");
+
+            if (user.Password != password)
+                throw new AuthenticationException("Введенный пароль не корректен");
+
+            return _mapper.Map<UserViewModel>(user);// или return User;
+        }
+
         [HttpGet]
         [Route("GetUserById")]
         public async Task<IActionResult> GetUserById(Guid id)

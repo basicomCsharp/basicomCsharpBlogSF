@@ -1,4 +1,6 @@
-﻿namespace BlogSF.DAL.Repositories
+﻿using NuGet.Protocol.Plugins;
+
+namespace BlogSF.DAL.Repositories
 {
     public interface IUserRepositories
     {
@@ -7,5 +9,6 @@
         Task Create(User value);
         Task Update(User value);
         Task Delete(Guid id);
+        Task<User> GetByLogin(string login);
     }
 }

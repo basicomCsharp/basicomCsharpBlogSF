@@ -41,7 +41,12 @@ namespace BlogSF.DAL.Repositories
         public async Task<IEnumerable<User>> GetAll()
         {
             return await db.Users.ToListAsync();
-        }        
+        }
+
+        public async Task<User> GetByLogin(string _login)
+        {
+            return await db.Users.Where(u => u.login == _login).FirstOrDefaultAsync();
+        }
 
         public async Task Update(User value)
         {
