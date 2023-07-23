@@ -531,3 +531,5 @@ C:\SF\2023\Mvc\BlogSF\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.C
 C:\SF\2023\Mvc\BlogSF\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\SF\2023\Mvc\BlogSF\obj\Debug\net6.0\BlogSF.RazorAssemblyInfo.cache
 C:\SF\2023\Mvc\BlogSF\obj\Debug\net6.0\BlogSF.RazorAssemblyInfo.cs
+C:\SF\2023\Mvc\BlogSF\bin\Debug\net6.0\AutoMapper.dll
+C:\SF\2023\Mvc\BlogSF\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

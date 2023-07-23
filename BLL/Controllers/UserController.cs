@@ -1,10 +1,15 @@
-﻿using BlogSF.DAL.Repositories;
+﻿using AutoMapper;
+using BlogSF.DAL.Models;
+using BlogSF.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Security.Authentication;
 
 namespace BlogSF.BLL.Controllers
 {
+/*** В контроллере пользователей реализовать логику регистрации, редактирования, удаления пользователя, 
+ * а также логику получения всех пользователей и логику получения только одного пользователя по его идентификатору
+***/
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -13,31 +18,33 @@ namespace BlogSF.BLL.Controllers
         private IUserRepositories _user;
         private IBookRepositories _book;
         private ITagRepositories _tag;
+        private IMapper _mapper;
 
-        public UserController(IBookRepositories book, ICommentRepositories comment, IUserRepositories user, ITagRepositories tag)
+        public UserController(IBookRepositories book, ICommentRepositories comment, IUserRepositories user, ITagRepositories tag, IMapper mapper)
         {
             _comment = comment;
             _user = user;
             _book = book;
             _tag = tag;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("authenticate")]
-        public async Task<User> Authenticate(string login, string password)
+        public async Task<UserViewModel> Authenticate(string login, string password)
         {
             if (String.IsNullOrEmpty(login) ||
               String.IsNullOrEmpty(password))
                 throw new ArgumentNullException("Запрос не корректен");
 
-            var user = _user.GetByLogin(login);
+            var user = await _user.GetByLogin(login);
             if (user is null)
                 throw new AuthenticationException("Пользователь на найден");
 
             if (user.Password != password)
                 throw new AuthenticationException("Введенный пароль не корректен");
 
-            return _mapper.Map<UserViewModel>(user);// или return User;
+            return _mapper.Map<UserViewModel>(user);
         }
 
         [HttpGet]
@@ -67,31 +74,34 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpPost]
-        [Route("Create")]
+        [Route("CreateUser")]
         public async Task<IActionResult> Create(User value)
         {
+#if DEBUG
             value.Id = Guid.NewGuid();
-            value.FirstName = "Иван"+ DateTime.Now.Day.ToString(); ;
-            value.LastName = "Иванов" + DateTime.Now.ToString(); ;
+            value.FirstName = "Админ"+ DateTime.Now.Day.ToString(); ;
+            value.LastName = "Админов" + DateTime.Now.ToString(); ;
             value.Email = DateTime.Now.Hour.ToString() +"@mail.ru";
-            value.login = "login";
-            value.password = "password";
+            value.Login = "login"+ value.FirstName;
+            value.Password = "password" + value.LastName;
+            value.Role = "admin";//new Role() { Id = Guid.NewGuid(), Name ="admin" };
+#endif
             await _user.Create(value);
             return StatusCode(200, value);
         }
 
         [HttpPut]
-        [Route("Update")]
+        [Route("UpdateUser")]
         public async Task<IActionResult> Update(User value)
         {
-
+#if DEBUG
             value.Id = new Guid("384c43f2-4b37-470b-93fc-947000a3acc9");
             value.FirstName = "Иван";
             value.LastName= "Ивановcкий";
             value.Email = "ivan@mail.ru";
-            value.login = "login2";
-            value.password = "password3";
-            
+            value.Login = "login2";
+            value.Password = "password3";
+#endif         
             try
             {
                 await _user.Update(value);
@@ -102,8 +112,8 @@ namespace BlogSF.BLL.Controllers
             return NoContent();
         }
         [HttpDelete]
-        [Route("")]
-        public async Task<IActionResult> Delite(Guid id)
+        [Route("DeleteUser")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {

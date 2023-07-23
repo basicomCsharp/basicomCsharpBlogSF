@@ -28,10 +28,12 @@ namespace BlogSF.Controller
         [Route("CreateComment")]
         public async Task<IActionResult> CreateComment(Comment newComment)
         {
+#if DEBUG
             newComment = new Comment();
             newComment.Id = Guid.NewGuid();
             newComment.Title = DateTime.Now.Date.ToString();
             newComment.Text = DateTime.Now.ToString();
+#endif
             await _comment.Create(newComment);
             return StatusCode(200, newComment);
         }

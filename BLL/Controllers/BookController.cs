@@ -4,6 +4,10 @@ using Newtonsoft.Json.Linq;
 
 namespace BlogSF.BLL.Controllers
 {
+    /***
+     * В контроллере статей реализовать логику создания, редактирования, удаления статьи, 
+     * а также логику получения всех статей и всех статей определённого автора по его идентификатору
+     ***/
     [ApiController]
     [Route("[controller]")]
     public class BookController : ControllerBase
@@ -20,7 +24,11 @@ namespace BlogSF.BLL.Controllers
             _book = book;
             _tag = tag;
         }
-
+        /// <summary>
+        /// метод создания статьи
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("CreateBook")]
         public async Task<IActionResult> Create(Book value)
@@ -34,7 +42,11 @@ namespace BlogSF.BLL.Controllers
             await _book.Create(value);
             return StatusCode(200, value);
         }
-
+        /// <summary>
+        /// метод обновления статьи
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("UpdateBook")]
         public async Task<IActionResult> Update(Book value)
@@ -48,7 +60,11 @@ namespace BlogSF.BLL.Controllers
             { }
             return NoContent();
         }
-
+        /// <summary>
+        /// метод удаления статьи по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("DeleteBook")]
         public async Task<IActionResult> DeleteBook(Guid id)
@@ -62,7 +78,10 @@ namespace BlogSF.BLL.Controllers
             { }
             return NotFound();
         }
-
+        /// <summary>
+        /// метод получения всех статей
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetAllBooks")]
         public async Task<IActionResult> GetAllBooks()
@@ -71,7 +90,11 @@ namespace BlogSF.BLL.Controllers
 
             return StatusCode(200, value);
         }
-
+        /// <summary>
+        /// получение статьи по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetBookById")]
         public async Task<IActionResult> GetBookById(Guid id)

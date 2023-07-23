@@ -4,6 +4,10 @@ using Newtonsoft.Json.Linq;
 
 namespace BlogSF.BLL.Controllers
 {
+    /***
+     * В контроллере тегов реализовать логику создания, редактирования, удаления тега, 
+     * а также логику получения всех тегов и только одного тега по его идентификатору
+     * ***/
     [ApiController]
     [Route("[controller]")]
     public class TagController : ControllerBase

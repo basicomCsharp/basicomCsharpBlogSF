@@ -17,7 +17,7 @@ namespace BlogSF
         public DbSet<Role> Roles { get; set; }
         public AppContext()
         {
-            //Database.CreateIfNotExists();        
+            
             //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
