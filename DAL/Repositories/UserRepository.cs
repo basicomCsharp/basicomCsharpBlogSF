@@ -35,12 +35,13 @@ namespace BlogSF.DAL.Repositories
         public async Task<User> Get(Guid id)
         {
 
-            return await db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+            return await db.Users.Where(u => u.Id == id).Include(u => u.Role).FirstOrDefaultAsync();
 
         }
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await db.Users.ToListAsync();
+            return await db.Users.Include(u => u.Role).ToListAsync();
+            //return await db.Users.ToListAsync();
         }
 
         public async Task<User> GetByLogin(string _login)

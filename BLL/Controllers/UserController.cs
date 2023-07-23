@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using BlogSF.DAL.Models;
 using BlogSF.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Security.Authentication;
+using System.Security.Claims;
 
 namespace BlogSF.BLL.Controllers
 {
@@ -44,6 +46,19 @@ namespace BlogSF.BLL.Controllers
             if (user.Password != password)
                 throw new AuthenticationException("Введенный пароль не корректен");
 
+            var claims = new List<Claim>() //Подлкючить using дженерики и клаймы using System.Security.Claims; -системный класс
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login);
+            }
+
+         ClaimsIdentity claimsIdentity = new ClaimsIdentity(
+                claims,
+                "AddCookies",
+                ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+        
             return _mapper.Map<UserViewModel>(user);
         }
 
