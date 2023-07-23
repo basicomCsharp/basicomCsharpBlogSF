@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BlogSF.DAL.Models;
 using BlogSF.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Security.Authentication;
@@ -30,7 +32,7 @@ namespace BlogSF.BLL.Controllers
             _tag = tag;
             _mapper = mapper;
         }
-
+        
         [HttpPost]
         [Route("authenticate")]
         public async Task<UserViewModel> Authenticate(string login, string password)
@@ -48,10 +50,11 @@ namespace BlogSF.BLL.Controllers
 
             var claims = new List<Claim>() //Подлкючить using дженерики и клаймы using System.Security.Claims; -системный класс
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login);
-            }
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
+            };
 
-         ClaimsIdentity claimsIdentity = new ClaimsIdentity(
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(
                 claims,
                 "AddCookies",
                 ClaimsIdentity.DefaultNameClaimType,
@@ -62,6 +65,7 @@ namespace BlogSF.BLL.Controllers
             return _mapper.Map<UserViewModel>(user);
         }
 
+        [Authorize(Roles ="admin")]
         [HttpGet]
         [Route("GetUserById")]
         public async Task<IActionResult> GetUserById(Guid id)
@@ -79,6 +83,7 @@ namespace BlogSF.BLL.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         [Route("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
@@ -88,6 +93,7 @@ namespace BlogSF.BLL.Controllers
             return StatusCode(200, value);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("CreateUser")]
         public async Task<IActionResult> Create(User value)
@@ -105,6 +111,7 @@ namespace BlogSF.BLL.Controllers
             return StatusCode(200, value);
         }
 
+        [Authorize]
         [HttpPut]
         [Route("UpdateUser")]
         public async Task<IActionResult> Update(User value)
@@ -126,6 +133,8 @@ namespace BlogSF.BLL.Controllers
             { }
             return NoContent();
         }
+
+        [Authorize]
         [HttpDelete]
         [Route("DeleteUser")]
         public async Task<IActionResult> Delete(Guid id)
