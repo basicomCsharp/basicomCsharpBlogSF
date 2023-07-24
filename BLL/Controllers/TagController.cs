@@ -1,6 +1,13 @@
-﻿using BlogSF.DAL.Repositories;
+﻿using AutoMapper;
+using BlogSF.DAL.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
+using System.Security.Claims;
 
 namespace BlogSF.BLL.Controllers
 {
@@ -8,6 +15,7 @@ namespace BlogSF.BLL.Controllers
      * В контроллере тегов реализовать логику создания, редактирования, удаления тега, 
      * а также логику получения всех тегов и только одного тега по его идентификатору
      * ***/
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class TagController : ControllerBase
@@ -26,6 +34,8 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpPost]
+
+        [Authorize(Roles = "admin")]
         [Route("CreateTag")]
         public async Task<IActionResult> Create(Tag value)
         {
@@ -34,6 +44,8 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpPut]
+
+        [Authorize(Roles = "admin")]
         [Route("UpdateTag")]
         public async Task<IActionResult> Update(Tag Value)
         {
@@ -43,11 +55,13 @@ namespace BlogSF.BLL.Controllers
                 return StatusCode(200, "Tag обновлён");
             }
             catch
-            { }
-            return NoContent();
+            { return NoContent(); }
+            
         }
 
         [HttpDelete]
+
+        [Authorize(Roles = "admin")]
         [Route("DeleteTag")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -57,8 +71,7 @@ namespace BlogSF.BLL.Controllers
                 return StatusCode(200, "Tag удалён");
             }
             catch
-            { }
-            return NotFound();
+            { return NotFound(); }            
         }
 
         [HttpGet]
@@ -83,8 +96,7 @@ namespace BlogSF.BLL.Controllers
                 return StatusCode(200, value);
             }
             catch
-            { }
-            return NotFound();
+            { return NotFound(); }            
         }
     }
 }

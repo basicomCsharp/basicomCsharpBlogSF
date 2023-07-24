@@ -1,6 +1,12 @@
-﻿using BlogSF.DAL.Repositories;
+﻿using AutoMapper;
+using BlogSF.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
+using System.Security.Claims;
 
 namespace BlogSF.BLL.Controllers
 {
@@ -8,6 +14,7 @@ namespace BlogSF.BLL.Controllers
      * В контроллере статей реализовать логику создания, редактирования, удаления статьи, 
      * а также логику получения всех статей и всех статей определённого автора по его идентификатору
      ***/
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class BookController : ControllerBase
@@ -30,6 +37,7 @@ namespace BlogSF.BLL.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [Route("CreateBook")]
         public async Task<IActionResult> Create(Book value)
         {
@@ -48,6 +56,8 @@ namespace BlogSF.BLL.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut]
+        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [Route("UpdateBook")]
         public async Task<IActionResult> Update(Book value)
         {
@@ -57,8 +67,10 @@ namespace BlogSF.BLL.Controllers
                 return StatusCode(200,"Обновление статьи прошло успешно");
             }
             catch
-            { }
-            return NoContent();
+            {
+                return NoContent();
+            }
+            
         }
         /// <summary>
         /// метод удаления статьи по id
@@ -66,6 +78,8 @@ namespace BlogSF.BLL.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
+
+        [Authorize(Roles = "admin")]
         [Route("DeleteBook")]
         public async Task<IActionResult> DeleteBook(Guid id)
         {
@@ -75,8 +89,10 @@ namespace BlogSF.BLL.Controllers
                 return StatusCode(200, "Статья удалена!");
             }
             catch
-            { }
-            return NotFound();
+            {
+                return NotFound();
+            }
+            
         }
         /// <summary>
         /// метод получения всех статей
@@ -108,8 +124,9 @@ namespace BlogSF.BLL.Controllers
                 return StatusCode(200, value);
             }
             catch
-            { }
-            return NotFound();
+            {
+                return NotFound();
+            }            
         }
     }
 }

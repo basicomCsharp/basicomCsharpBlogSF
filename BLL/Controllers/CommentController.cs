@@ -1,12 +1,20 @@
-﻿
+﻿using AutoMapper;
 using BlogSF.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
+using System.Security.Claims;
+using System.Data;
 
 namespace BlogSF.Controller
 {
     //В контроллере комментариев реализовать логику
     //  создания, редактирования, удаления комментария,
     //  а также логику получения всех комментариев и только одного комментария по его идентификатору
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class CommentController: ControllerBase
@@ -25,6 +33,8 @@ namespace BlogSF.Controller
         }
  
         [HttpPost]
+
+        [Authorize(Roles = "admin")]
         [Route("CreateComment")]
         public async Task<IActionResult> CreateComment(Comment newComment)
         {
@@ -37,8 +47,8 @@ namespace BlogSF.Controller
             await _comment.Create(newComment);
             return StatusCode(200, newComment);
         }
-
-        [HttpPut]
+        [HttpPut]        
+        [Authorize(Roles = "admin")]
         [Route("UpdateComment")]
         public async Task<IActionResult> UpdateComment(Comment thisComment)            
         {
@@ -48,11 +58,12 @@ namespace BlogSF.Controller
                 return StatusCode(200,thisComment);
             }
             catch
-            { }
-            return NoContent();
+            { return NoContent(); }            
         }
 
         [HttpDelete]
+
+        [Authorize(Roles = "admin")]        
         [Route("DeleteCommwnt")]
         public async Task<IActionResult> DeliteComment(Guid id)
         {
@@ -62,8 +73,7 @@ namespace BlogSF.Controller
                 return StatusCode(200, " Комментарий удалён");
             }
             catch
-            {}
-            return NotFound();
+            { return NotFound(); }            
         }
 
        
@@ -90,8 +100,7 @@ namespace BlogSF.Controller
                 return StatusCode(200,comment);
             }
             catch
-            { }
-            return NotFound();
+            { return NotFound(); }           
         }
     }    
 }

@@ -33,6 +33,7 @@ namespace BlogSF.BLL.Controllers
             _tag = tag;
             _mapper = mapper;
         }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("Authenticate")]
@@ -94,6 +95,7 @@ namespace BlogSF.BLL.Controllers
         }
         
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [Route("CreateUser")]
         public async Task<IActionResult> Create(User value)
         {
@@ -111,6 +113,7 @@ namespace BlogSF.BLL.Controllers
         }
         
         [HttpPut]
+        [Authorize(Roles = "admin")]
         [Route("UpdateUser")]
         public async Task<IActionResult> Update(User value)
         {
@@ -132,8 +135,8 @@ namespace BlogSF.BLL.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "admin")]
         [HttpDelete]
+        [Authorize(Roles = "admin")]
         [Route("DeleteUser")]
         public async Task<IActionResult> Delete(Guid id)
         {
