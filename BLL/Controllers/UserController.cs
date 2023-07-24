@@ -11,9 +11,10 @@ using System.Security.Claims;
 
 namespace BlogSF.BLL.Controllers
 {
-/*** В контроллере пользователей реализовать логику регистрации, редактирования, удаления пользователя, 
- * а также логику получения всех пользователей и логику получения только одного пользователя по его идентификатору
-***/
+    /*** В контроллере пользователей реализовать логику регистрации, редактирования, удаления пользователя, 
+     * а также логику получения всех пользователей и логику получения только одного пользователя по его идентификатору
+    ***/
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -32,9 +33,9 @@ namespace BlogSF.BLL.Controllers
             _tag = tag;
             _mapper = mapper;
         }
-        
+        [AllowAnonymous]
         [HttpPost]
-        [Route("authenticate")]
+        [Route("Authenticate")]
         public async Task<UserViewModel> Authenticate(string login, string password)
         {
             if (String.IsNullOrEmpty(login) ||
@@ -64,8 +65,7 @@ namespace BlogSF.BLL.Controllers
         
             return _mapper.Map<UserViewModel>(user);
         }
-
-        [Authorize(Roles ="admin")]
+        
         [HttpGet]
         [Route("GetUserById")]
         public async Task<IActionResult> GetUserById(Guid id)
@@ -83,7 +83,7 @@ namespace BlogSF.BLL.Controllers
             return NotFound();
         }
 
-        [Authorize(Roles = "admin")]
+                
         [HttpGet]
         [Route("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
@@ -92,8 +92,7 @@ namespace BlogSF.BLL.Controllers
             var value = await _user.GetAll();
             return StatusCode(200, value);
         }
-
-        [Authorize]
+        
         [HttpPost]
         [Route("CreateUser")]
         public async Task<IActionResult> Create(User value)
@@ -110,8 +109,7 @@ namespace BlogSF.BLL.Controllers
             await _user.Create(value);
             return StatusCode(200, value);
         }
-
-        [Authorize]
+        
         [HttpPut]
         [Route("UpdateUser")]
         public async Task<IActionResult> Update(User value)
@@ -134,7 +132,7 @@ namespace BlogSF.BLL.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpDelete]
         [Route("DeleteUser")]
         public async Task<IActionResult> Delete(Guid id)

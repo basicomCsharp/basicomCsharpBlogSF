@@ -71,7 +71,7 @@ namespace BlogSF
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
