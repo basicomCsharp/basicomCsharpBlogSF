@@ -14,7 +14,7 @@ namespace BlogSF.Controller
     //В контроллере комментариев реализовать логику
     //  создания, редактирования, удаления комментария,
     //  а также логику получения всех комментариев и только одного комментария по его идентификатору
-    [Authorize]
+    [Authorize(Roles = "user, moderator")]
     [ApiController]
     [Route("[controller]")]
     public class CommentController: ControllerBase
@@ -33,8 +33,6 @@ namespace BlogSF.Controller
         }
  
         [HttpPost]
-
-        [Authorize(Roles = "admin")]
         [Route("CreateComment")]
         public async Task<IActionResult> CreateComment(Comment newComment)
         {
@@ -48,9 +46,8 @@ namespace BlogSF.Controller
             return StatusCode(200, newComment);
         }
         [HttpPut]        
-        [Authorize(Roles = "admin")]
         [Route("UpdateComment")]
-        public async Task<IActionResult> UpdateComment(Comment thisComment)            
+        public async Task<IActionResult> UpdateComment([FromBody]Comment thisComment)            
         {
             try
             {
@@ -62,8 +59,6 @@ namespace BlogSF.Controller
         }
 
         [HttpDelete]
-
-        [Authorize(Roles = "admin")]        
         [Route("DeleteCommwnt")]
         public async Task<IActionResult> DeliteComment(Guid id)
         {
@@ -78,6 +73,7 @@ namespace BlogSF.Controller
 
        
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetAllComments")]
         public async Task<IActionResult> GetAllComments()
         {
@@ -85,9 +81,9 @@ namespace BlogSF.Controller
 
             return  StatusCode(200,comments);
         }
-
-        //[HttpGet(Name = "GetCommentById")]
+        
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetCommentById")]
         public async Task<IActionResult> GetCommentById(Guid id)
         {

@@ -34,8 +34,7 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpPost]
-
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "user, moderator")]
         [Route("CreateTag")]
         public async Task<IActionResult> Create(Tag value)
         {
@@ -44,8 +43,7 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpPut]
-
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "user, moderator")]
         [Route("UpdateTag")]
         public async Task<IActionResult> Update(Tag Value)
         {
@@ -60,8 +58,7 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpDelete]
-
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "user, moderator")]
         [Route("DeleteTag")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -75,6 +72,7 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetAllTags")]
         public async Task<IActionResult> GetAllTags()
         {
@@ -84,6 +82,7 @@ namespace BlogSF.BLL.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetTagById")]
         public async Task<IActionResult> GetTagById(Guid id)
         {

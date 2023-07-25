@@ -23,9 +23,9 @@ namespace BlogSF.BLL.Controllers
         private IUserRepositories _user;
         private IBookRepositories _book;
         private ITagRepositories _tag;
-
+        
         public BookController(IBookRepositories book, ICommentRepositories comment, IUserRepositories user, ITagRepositories tag)
-        {
+        {            
             _comment = comment;
             _user = user;
             _book = book;
@@ -37,13 +37,13 @@ namespace BlogSF.BLL.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "user, moderator")]
         [Route("CreateBook")]
-        public async Task<IActionResult> Create(Book value)
+        public async Task<IActionResult> Create([FromBody]Book value,[FromHeader] User _user)
         {
-            value.Id = Guid.NewGuid();
-            value.Author = "Иван" + DateTime.Now.Day.ToString();
-            value.Name = "Иванов" + DateTime.Now.ToString(); 
+            value.Id = Guid.NewGuid();            
+            value.Author = _user.FirstName + " " + _user.LastName;//"Иван" + DateTime.Now.Day.ToString();
+            value.Name = "Статья №" + DateTime.Now.ToString(); 
             value.Content = "abrakadabra";
             value.CreatedData = DateTime.Now;
             
@@ -56,19 +56,28 @@ namespace BlogSF.BLL.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut]
-        [Authorize(Roles = "admin")]
-        [Authorize(Roles = "moderator")]
+        [Authorize(Roles = "user, moderator")]
         [Route("UpdateBook")]
-        public async Task<IActionResult> Update(Book value)
+        public async Task<IActionResult> Update([FromBody] Book value)
         {
             try
             {
+                var roles = ((ClaimsIdentity)User.Identity).Claims;
+                var userIdentity = (ClaimsIdentity)User.Identity;
+                var claims = userIdentity.Claims;
+                var roleClaimType = userIdentity.RoleClaimType;
+                var roles2 = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+
+                if (userIdentity.Name == "user" && (value.Author != userIdentity.Name))
+                {
+                    return StatusCode(400, "Только автор и модератор имеет право обновлять статью");
+                }                
                 await _book.Update(value);
-                return StatusCode(200,"Обновление статьи прошло успешно");
+                return StatusCode(200, "Обновление статьи прошло успешно");                                    
             }
             catch
             {
-                return NoContent();
+                return StatusCode(400, "Только автор и модератор имеет право обновлять статью");
             }
             
         }
@@ -78,8 +87,7 @@ namespace BlogSF.BLL.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
-
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "user, moderator")]
         [Route("DeleteBook")]
         public async Task<IActionResult> DeleteBook(Guid id)
         {
@@ -99,6 +107,7 @@ namespace BlogSF.BLL.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetAllBooks")]
         public async Task<IActionResult> GetAllBooks()
         {
@@ -112,6 +121,7 @@ namespace BlogSF.BLL.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetBookById")]
         public async Task<IActionResult> GetBookById(Guid id)
         {
