@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 using System.Security.Authentication;
 using System.Security.Claims;
 
@@ -39,14 +40,16 @@ namespace BlogSF.BLL.Controllers
         [HttpPost]
         [Authorize(Roles = "user, moderator")]
         [Route("CreateBook")]
-        public async Task<IActionResult> Create([FromBody]Book value,[FromHeader] User _user)
+        public async Task<IActionResult> Create([FromBody]Book value)
         {
-            value.Id = Guid.NewGuid();            
-            value.Author = _user.FirstName + " " + _user.LastName;//"Иван" + DateTime.Now.Day.ToString();
+#if DEBUG
+            var userIdentity = (ClaimsIdentity)User.Identity;
+            value.Id =  Guid.NewGuid();            
+            value.Author = userIdentity.Name;
             value.Name = "Статья №" + DateTime.Now.ToString(); 
             value.Content = "abrakadabra";
             value.CreatedData = DateTime.Now;
-            
+#endif            
             await _book.Create(value);
             return StatusCode(200, value);
         }
@@ -62,13 +65,11 @@ namespace BlogSF.BLL.Controllers
         {
             try
             {
-                var roles = ((ClaimsIdentity)User.Identity).Claims;
-                var userIdentity = (ClaimsIdentity)User.Identity;
-                var claims = userIdentity.Claims;
-                var roleClaimType = userIdentity.RoleClaimType;
+                var userIdentity = (ClaimsIdentity)User.Identity;                
+                var claims = userIdentity.Claims;                
                 var roles2 = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
 
-                if (userIdentity.Name == "user" && (value.Author != userIdentity.Name))
+                if (roles2[0].Value == "user" && (value.Author != userIdentity.Name))
                 {
                     return StatusCode(400, "Только автор и модератор имеет право обновлять статью");
                 }                
@@ -89,10 +90,18 @@ namespace BlogSF.BLL.Controllers
         [HttpDelete]
         [Authorize(Roles = "user, moderator")]
         [Route("DeleteBook")]
-        public async Task<IActionResult> DeleteBook(Guid id)
+        public async Task<IActionResult> DeleteBook(Guid id, Book theBook)
         {
             try
             {
+                var userIdentity = (ClaimsIdentity)User.Identity;
+                var claims = userIdentity.Claims;
+                var roles2 = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+
+                if (roles2[0].Value == "user" && (theBook.Author != userIdentity.Name))
+                {
+                    return StatusCode(400, "Только автор и модератор имеет право обновлять статью");
+                }
                 await _book.Delete(id);
                 return StatusCode(200, "Статья удалена!");
             }
@@ -126,7 +135,7 @@ namespace BlogSF.BLL.Controllers
         public async Task<IActionResult> GetBookById(Guid id)
         {
             try
-            {
+            {  
                 var value = await _book.Get(id);
                 if (value == null)
                     return StatusCode(400, "Статья не найдена!");

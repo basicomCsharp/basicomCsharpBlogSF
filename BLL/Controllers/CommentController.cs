@@ -33,6 +33,7 @@ namespace BlogSF.Controller
         }
  
         [HttpPost]
+        [Authorize(Roles = "user, moderator")]
         [Route("CreateComment")]
         public async Task<IActionResult> CreateComment(Comment newComment)
         {
@@ -45,7 +46,8 @@ namespace BlogSF.Controller
             await _comment.Create(newComment);
             return StatusCode(200, newComment);
         }
-        [HttpPut]        
+        [HttpPut]
+        [Authorize(Roles = "user, moderator")]
         [Route("UpdateComment")]
         public async Task<IActionResult> UpdateComment([FromBody]Comment thisComment)            
         {
@@ -59,6 +61,7 @@ namespace BlogSF.Controller
         }
 
         [HttpDelete]
+        [Authorize(Roles = "user, moderator")]
         [Route("DeleteCommwnt")]
         public async Task<IActionResult> DeliteComment(Guid id)
         {

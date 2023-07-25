@@ -50,10 +50,11 @@ namespace BlogSF.BLL.Controllers
             if (user.Password != password)
                 throw new AuthenticationException("Введенный пароль не корректен");
 
-            var claims = new List<Claim>() //Подлкючить using дженерики и клаймы using System.Security.Claims; -системный класс
+            var claims = new List<Claim>() //Храним ФИО и роль
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.FirstName + " " +user.LastName),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
+                //new Claim(ClaimsIdentity.DefaultIssuer.)
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(
@@ -118,12 +119,12 @@ namespace BlogSF.BLL.Controllers
         public async Task<IActionResult> Update(User value)
         {
 #if DEBUG
-            value.Id = new Guid("384c43f2-4b37-470b-93fc-947000a3acc9");
-            value.FirstName = "Иван";
-            value.LastName= "Ивановcкий";
-            value.Email = "ivan@mail.ru";
-            value.Login = "login2";
-            value.Password = "password3";
+            //value.Id = new Guid("384c43f2-4b37-470b-93fc-947000a3acc9");
+            //value.FirstName = "Иван";
+            //value.LastName= "Ивановcкий";
+            //value.Email = "ivan@mail.ru";
+            //value.Login = "login2";
+            //value.Password = "password3";
 #endif         
             try
             {
